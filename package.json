@@ -1,0 +1,9 @@
+{
+  "name": "house-designer",
+  "private": true,
+  "scripts": {
+    "dev": "cd client && npx vite --open",
+    "build": "cd client && npx vite build",
+    "preview": "cd client && npx vite preview"
+  }
+}
