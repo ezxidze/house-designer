@@ -130,45 +130,58 @@ function Wall3D({ wall }) {
   );
 }
 
+const WIN_FRAME_COLORS = { PVC: "#e8e8e8", Aluminum: "#a0a0a0", Wood: "#b5864a" };
+const WIN_GLASS_COLORS = { Single: "#a8d8ea", Double: "#87ceeb", Triple: "#6bb3d9", Tinted: "#5a8a9a" };
+const WIN_GLASS_OPACITY = { Single: 0.45, Double: 0.35, Triple: 0.28, Tinted: 0.5 };
+
 function Window3D({ win }) {
+  const w = (win.width || 100) / 100;
+  const h = (win.height || 120) / 100;
+  const sillH = (win.sillHeight || 90) / 100;
+  const rot = ((win.rotation || 0) * Math.PI) / 180;
+  const frameColor = WIN_FRAME_COLORS[win.material] || "#e8e8e8";
+  const glassColor = WIN_GLASS_COLORS[win.glassType] || "#87ceeb";
+  const glassOp = WIN_GLASS_OPACITY[win.glassType] || 0.35;
+
   return (
-    <group position={[win.x / 100, 1.5, win.y / 100]}>
-      {/* Frame */}
+    <group position={[win.x / 100, sillH + h / 2, win.y / 100]} rotation={[0, -rot, 0]}>
       <mesh>
-        <boxGeometry args={[1.0, 1.2, 0.12]} />
-        <meshStandardMaterial color="#d4d4d4" roughness={0.3} />
+        <boxGeometry args={[w, h, 0.12]} />
+        <meshStandardMaterial color={frameColor} roughness={0.3} />
       </mesh>
-      {/* Glass */}
       <mesh position={[0, 0, 0.01]}>
-        <boxGeometry args={[0.85, 1.0, 0.03]} />
-        <meshPhysicalMaterial
-          color="#87ceeb"
-          transparent
-          opacity={0.35}
-          roughness={0.05}
-          metalness={0.1}
-          clearcoat={1}
-        />
+        <boxGeometry args={[w - 0.08, h - 0.08, 0.03]} />
+        <meshPhysicalMaterial color={glassColor} transparent opacity={glassOp} roughness={0.05} metalness={0.1} clearcoat={1} />
       </mesh>
     </group>
   );
 }
 
+const DOOR_COLORS = { Wood: "#8b5e3c", Metal: "#707070", Glass: "#b0c4de", PVC: "#d4d4d4" };
+const DOOR_PANEL_COLORS = { Wood: "#a0714b", Metal: "#888888", Glass: "#cce0f0", PVC: "#e8e8e8" };
+
 function Door3D({ door }) {
+  const w = (door.width || 90) / 100;
+  const h = (door.height || 210) / 100;
+  const rot = ((door.rotation || 0) * Math.PI) / 180;
+  const mat = door.material || "Wood";
+  const isGlass = mat === "Glass";
+
   return (
-    <group position={[door.x / 100, 1.05, door.y / 100]}>
-      {/* Frame */}
+    <group position={[door.x / 100, h / 2, door.y / 100]} rotation={[0, -rot, 0]}>
       <mesh>
-        <boxGeometry args={[0.95, 2.15, 0.14]} />
-        <meshStandardMaterial color="#5c3a1e" roughness={0.6} />
+        <boxGeometry args={[w + 0.06, h + 0.06, 0.14]} />
+        <meshStandardMaterial color={DOOR_COLORS[mat]} roughness={0.6} />
       </mesh>
-      {/* Door panel */}
       <mesh position={[0, 0, 0.02]}>
-        <boxGeometry args={[0.82, 2.0, 0.06]} />
-        <meshStandardMaterial color="#8b5e3c" roughness={0.5} />
+        <boxGeometry args={[w - 0.06, h - 0.06, 0.06]} />
+        {isGlass ? (
+          <meshPhysicalMaterial color="#cce0f0" transparent opacity={0.4} roughness={0.05} clearcoat={1} />
+        ) : (
+          <meshStandardMaterial color={DOOR_PANEL_COLORS[mat]} roughness={0.5} />
+        )}
       </mesh>
-      {/* Handle */}
-      <mesh position={[0.3, 0, 0.08]}>
+      <mesh position={[w / 2 - 0.1, 0, 0.08]}>
         <sphereGeometry args={[0.03, 8, 8]} />
         <meshStandardMaterial color="#c0c0c0" metalness={0.8} roughness={0.2} />
       </mesh>

@@ -257,14 +257,14 @@ const useStore = create((set, get) => ({
   addWindow: (win) => {
     get()._modifyFloor((f) => ({
       ...f,
-      windows: [...f.windows, { ...win, id: uid(), width: 100, height: 120 }],
+      windows: [...f.windows, { ...win, id: uid(), width: 100, height: 120, rotation: 0 }],
     }));
   },
 
   addDoor: (door) => {
     get()._modifyFloor((f) => ({
       ...f,
-      doors: [...f.doors, { ...door, id: uid(), width: 90, height: 210 }],
+      doors: [...f.doors, { ...door, id: uid(), width: 90, height: 210, rotation: 0 }],
     }));
   },
 
@@ -300,6 +300,44 @@ const useStore = create((set, get) => ({
       ...f,
       doors: f.doors.map((d) => (d.id === id ? { ...d, ...data } : d)),
     }));
+  },
+
+  // --- Rotate element (windows/doors) ---
+  rotateElement: (id, type, angleDeg) => {
+    if (type === "window") {
+      get()._modifyFloor((f) => ({
+        ...f,
+        windows: f.windows.map((w) =>
+          w.id === id ? { ...w, rotation: ((w.rotation || 0) + angleDeg) % 360 } : w
+        ),
+      }));
+    }
+    if (type === "door") {
+      get()._modifyFloor((f) => ({
+        ...f,
+        doors: f.doors.map((d) =>
+          d.id === id ? { ...d, rotation: ((d.rotation || 0) + angleDeg) % 360 } : d
+        ),
+      }));
+    }
+  },
+
+  // --- Resize element (windows/doors) ---
+  resizeElement: (id, type, newWidth, newHeight) => {
+    const w = Math.max(20, newWidth);
+    const h = Math.max(20, newHeight);
+    if (type === "window") {
+      get()._modifyFloor((f) => ({
+        ...f,
+        windows: f.windows.map((win) => (win.id === id ? { ...win, width: w, height: h } : win)),
+      }));
+    }
+    if (type === "door") {
+      get()._modifyFloor((f) => ({
+        ...f,
+        doors: f.doors.map((d) => (d.id === id ? { ...d, width: w, height: h } : d)),
+      }));
+    }
   },
 
   // --- Selection & Drag ---

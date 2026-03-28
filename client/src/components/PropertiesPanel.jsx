@@ -63,6 +63,30 @@ export default function PropertiesPanel() {
                 <input type="number" value={selWindow.height} onChange={(e) => updateWindow(selWindow.id, { height: +e.target.value })}
                   className="w-16 border rounded px-1 py-0.5" /> cm
               </label>
+              <label className="flex items-center gap-1">
+                Sill H:
+                <input type="number" value={selWindow.sillHeight || 90} onChange={(e) => updateWindow(selWindow.id, { sillHeight: +e.target.value })}
+                  className="w-16 border rounded px-1 py-0.5" /> cm
+              </label>
+              <label className="flex items-center gap-1">
+                Rotation:
+                <input type="number" value={selWindow.rotation || 0} step="15" onChange={(e) => updateWindow(selWindow.id, { rotation: +e.target.value % 360 })}
+                  className="w-16 border rounded px-1 py-0.5" /> °
+              </label>
+              <label className="flex items-center gap-1">
+                Frame:
+                <select value={selWindow.material || "PVC"} onChange={(e) => updateWindow(selWindow.id, { material: e.target.value })}
+                  className="border rounded px-1 py-0.5">
+                  <option>PVC</option><option>Aluminum</option><option>Wood</option>
+                </select>
+              </label>
+              <label className="flex items-center gap-1">
+                Glass:
+                <select value={selWindow.glassType || "Double"} onChange={(e) => updateWindow(selWindow.id, { glassType: e.target.value })}
+                  className="border rounded px-1 py-0.5">
+                  <option>Single</option><option>Double</option><option>Triple</option><option>Tinted</option>
+                </select>
+              </label>
               <button onClick={() => removeWindow(selWindow.id)} className="mt-1 text-red-600 hover:text-red-800 font-medium">Delete window</button>
             </div>
           )}
@@ -79,6 +103,25 @@ export default function PropertiesPanel() {
                 Height:
                 <input type="number" value={selDoor.height} onChange={(e) => updateDoor(selDoor.id, { height: +e.target.value })}
                   className="w-16 border rounded px-1 py-0.5" /> cm
+              </label>
+              <label className="flex items-center gap-1">
+                Rotation:
+                <input type="number" value={selDoor.rotation || 0} step="15" onChange={(e) => updateDoor(selDoor.id, { rotation: +e.target.value % 360 })}
+                  className="w-16 border rounded px-1 py-0.5" /> °
+              </label>
+              <label className="flex items-center gap-1">
+                Material:
+                <select value={selDoor.material || "Wood"} onChange={(e) => updateDoor(selDoor.id, { material: e.target.value })}
+                  className="border rounded px-1 py-0.5">
+                  <option>Wood</option><option>Metal</option><option>Glass</option><option>PVC</option>
+                </select>
+              </label>
+              <label className="flex items-center gap-1">
+                Type:
+                <select value={selDoor.doorType || "Single"} onChange={(e) => updateDoor(selDoor.id, { doorType: e.target.value })}
+                  className="border rounded px-1 py-0.5">
+                  <option>Single</option><option>Double</option><option>Sliding</option><option>Folding</option>
+                </select>
               </label>
               <button onClick={() => removeDoor(selDoor.id)} className="mt-1 text-red-600 hover:text-red-800 font-medium">Delete door</button>
             </div>
@@ -150,6 +193,7 @@ export default function PropertiesPanel() {
       {/* Keyboard hints */}
       <div className="p-2 border-t border-gray-200 text-[10px] text-gray-400 space-y-0.5">
         <div><b>V</b> Select  <b>W</b> Wall  <b>N</b> Window  <b>D</b> Door</div>
+        <div><b>R</b> Rotate 15°  <b>Shift+R</b> 90°</div>
         <div><b>Ctrl+Z</b> Undo  <b>Ctrl+Y</b> Redo  <b>Del</b> Delete</div>
       </div>
     </div>
