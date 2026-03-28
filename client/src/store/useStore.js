@@ -163,6 +163,10 @@ const useStore = create((set, get) => ({
   viewMode: "2d",
   showDimensions: true,
 
+  // Wall defaults for new walls
+  wallDefaults: { height: 280, thickness: 20, material: "Brick" },
+  setWallDefault: (key, val) => set((s) => ({ wallDefaults: { ...s.wallDefaults, [key]: val } })),
+
   // Drawing
   isDrawing: false,
   drawStart: null,
@@ -248,9 +252,10 @@ const useStore = create((set, get) => ({
 
   // --- Elements ---
   addWall: (wall) => {
+    const d = get().wallDefaults;
     get()._modifyFloor((f) => ({
       ...f,
-      walls: [...f.walls, { ...wall, id: uid(), thickness: 20, height: 280, material: "Brick" }],
+      walls: [...f.walls, { ...wall, id: uid(), thickness: d.thickness, height: d.height, material: d.material }],
     }));
   },
 

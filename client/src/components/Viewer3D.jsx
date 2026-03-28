@@ -104,6 +104,10 @@ const MATERIAL_COLORS = {
   Concrete: "#888888",
   Wood: "#b8860b",
   Drywall: "#eee8d5",
+  Stone: "#8a8578",
+  "Cinder Block": "#7a7a7a",
+  "SIP Panel": "#d4c9a8",
+  "Foam Block": "#c8c8c0",
 };
 
 function Wall3D({ wall }) {

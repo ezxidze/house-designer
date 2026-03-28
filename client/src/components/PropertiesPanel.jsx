@@ -1,10 +1,13 @@
 import useStore from "../store/useStore";
 
+const WALL_MATERIALS = ["Brick", "Concrete", "Wood", "Drywall", "Stone", "Cinder Block", "SIP Panel", "Foam Block"];
+
 export default function PropertiesPanel() {
   const {
     getFloor, selectedId, selectedType,
     removeWall, removeWindow, removeDoor,
     updateWall, updateWindow, updateDoor,
+    wallDefaults, setWallDefault, tool,
   } = useStore();
 
   const floor = getFloor();
@@ -43,7 +46,7 @@ export default function PropertiesPanel() {
                 Material:
                 <select value={selWall.material} onChange={(e) => updateWall(selWall.id, { material: e.target.value })}
                   className="border rounded px-1 py-0.5">
-                  <option>Brick</option><option>Concrete</option><option>Wood</option><option>Drywall</option>
+                  {WALL_MATERIALS.map((m) => <option key={m}>{m}</option>)}
                 </select>
               </label>
               <button onClick={() => removeWall(selWall.id)} className="mt-1 text-red-600 hover:text-red-800 font-medium">Delete wall</button>
@@ -126,6 +129,33 @@ export default function PropertiesPanel() {
               <button onClick={() => removeDoor(selDoor.id)} className="mt-1 text-red-600 hover:text-red-800 font-medium">Delete door</button>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Wall defaults - shown when wall tool is active and nothing selected */}
+      {tool === "wall" && !selWall && !selWindow && !selDoor && (
+        <div className="p-3 border-b border-gray-200 bg-amber-50">
+          <h3 className="font-bold text-amber-800 mb-2 text-sm">New Wall Settings</h3>
+          <div className="space-y-1.5">
+            <label className="flex items-center gap-1">
+              Height:
+              <input type="number" value={wallDefaults.height} onChange={(e) => setWallDefault("height", +e.target.value)}
+                className="w-16 border rounded px-1 py-0.5" /> cm
+            </label>
+            <label className="flex items-center gap-1">
+              Thickness:
+              <input type="number" value={wallDefaults.thickness} onChange={(e) => setWallDefault("thickness", +e.target.value)}
+                className="w-16 border rounded px-1 py-0.5" /> cm
+            </label>
+            <label className="flex items-center gap-1">
+              Material:
+              <select value={wallDefaults.material} onChange={(e) => setWallDefault("material", e.target.value)}
+                className="border rounded px-1 py-0.5">
+                {WALL_MATERIALS.map((m) => <option key={m}>{m}</option>)}
+              </select>
+            </label>
+            <p className="text-[10px] text-amber-600 mt-1">These settings apply to all new walls you draw.</p>
+          </div>
         </div>
       )}
 
